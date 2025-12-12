@@ -1,1 +1,8 @@
-/data/00_raw_data
+.DS_Store
+data/.DS_Store
+data/99_movie_stimulus
+data/00_raw_data
+data/01_processed_data
+data/old
+scripts/old
+data/visualizations
