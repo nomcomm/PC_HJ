@@ -8,4 +8,4 @@ scripts/old
 data/03_visualizations/grand_integrated_movie.mp4
 .venv/
 scripts/.jupyter/
-scripts/.ipynb/
+scripts/.ipynb_checkpoints/
