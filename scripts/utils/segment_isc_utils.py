@@ -57,7 +57,7 @@ def plot_split_half_comparison(data_df, title="Split-Half Consistency", output_p
     g1 = data[:, indices[:mid]].mean(axis=1)
     g2 = data[:, indices[mid:]].mean(axis=1)
     
-    plt.figure(figsize=(10, 4))
+    plt.figure(figsize=(5, 2))
     plt.plot(g1, color='dodgerblue', alpha=0.9, linewidth=1.5, label='Split Group 1')
     plt.plot(g2, color='darkorange', alpha=0.9, linewidth=1.5, label='Split Group 2')
     
@@ -67,8 +67,9 @@ def plot_split_half_comparison(data_df, title="Split-Half Consistency", output_p
     plt.title(f"{title} (r = {r:.3f})")
     plt.xlabel("Time (samples)")
     plt.ylabel("Signal Amplitude")
-    plt.legend()
+    #plt.legend()
     plt.xlim(0, len(g1))
+    sns.despine()
     
     plt.tight_layout()
     if output_path:
@@ -295,7 +296,7 @@ def get_subjects_by_condition(conditions_file, target_condition='PC'):
     # Remove duplicates if any
     subject_ids = sorted(list(set(subject_ids)))
     
-    print(f"[{target_condition}] Found {len(subject_ids)} subjects in condition file.")
+    #print(f"[{target_condition}] Found {len(subject_ids)} subjects in condition file.")
     return subject_ids
 
 def load_physio_data(data_dir, subject_ids, signal_type='GSR'):
@@ -335,7 +336,7 @@ def load_physio_data(data_dir, subject_ids, signal_type='GSR'):
         lookup_id = sub_id.lower()
         
         if lookup_id not in file_map:
-            print(f"  Warning: No data file found for subject {sub_id}")
+            #print(f"  Warning: No data file found for subject {sub_id}")
             continue
             
         file_path = file_map[lookup_id]
@@ -377,7 +378,7 @@ def load_physio_data(data_dir, subject_ids, signal_type='GSR'):
                 
             # If still NaNs (e.g. all NaNs), warning or skip
             if np.isnan(signal_data).any():
-                print(f"  Warning: {sub_id} {target_col} contains NaNs after interpolation. Dropping.")
+                #print(f"  Warning: {sub_id} {target_col} contains NaNs after interpolation. Dropping.")
                 continue
                 
             aligned_data[sub_id] = signal_data
@@ -398,8 +399,8 @@ def load_physio_data(data_dir, subject_ids, signal_type='GSR'):
     
     # Histogram of lengths
     length_counts = pd.Series(lengths).value_counts().sort_index()
-    print(f"\nData Length Distribution for {signal_type}:")
-    print(length_counts)
+    #print(f"\nData Length Distribution for {signal_type}:")
+    #print(length_counts)
     
     # Use the most common length or min length?
     # If we use min, we might cut good data because of one short file.
@@ -417,7 +418,7 @@ def load_physio_data(data_dir, subject_ids, signal_type='GSR'):
          raise ValueError("All loaded files are too short compared to median length!")
          
     target_len = min(valid_lengths) # Trim everyone to the shortest VALID length
-    print(f"Trimming data to common length: {target_len} samples.")
+    #print(f"Trimming data to common length: {target_len} samples.")
     
     skipped_short = 0
     for sub in valid_subjects:
@@ -435,7 +436,7 @@ def load_physio_data(data_dir, subject_ids, signal_type='GSR'):
     if skipped_short > 0:
         print(f"Dropped {skipped_short} subjects due to insufficient data length.")
         
-    print(f"Successfully loaded {len(final_subjects)} subjects for {signal_type}.\n")
+    #print(f"Successfully loaded {len(final_subjects)} subjects for {signal_type}.\n")
     
     # Create DataFrame
     df_final = pd.DataFrame(clean_data_dict)
