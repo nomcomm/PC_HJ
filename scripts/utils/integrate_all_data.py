@@ -57,7 +57,7 @@ def process_subject(subject_id):
     # GSR/ECG expected format: Time_sec, Value
     # Interpolate to common TIME_AXIS
     # Use 'nearest' or 'linear' extrapolation? Assuming data covers 0-319 roughly.
-    # GSR files seem to cover 0 to 319 exactly based on previous checks.
+    # GSR files cover 0 to 319 exactly based on previous checks.
     
     # --- GSR ---
     # Handle potential duplicate times or NaNs if any (should be clean from prev steps but good to be safe)
@@ -86,17 +86,15 @@ def process_subject(subject_id):
     
     # Handle NaNs in source ET data (though prev steps might have interpolated, check columns)
     # Target columns: Mean_Pupil, Interpolated Gaze X, Interpolated Gaze Y
-    # Note: Column names might vary slightly? Based on file check: "Interpolated Gaze X"
     
     pupil_src = df_et['Mean_Pupil']
     gaze_x_src = df_et['Interpolated Gaze X']
     gaze_y_src = df_et['Interpolated Gaze Y']
 
     # Interpolate ET
-    # Use linear interpolation. For gaps, the previous processing filled them?
+    # Use linear interpolation. For gaps, the previous processing filled them
     # If there are NaNs in 'processed' ET, we can leave them as NaNs or fill.
     # interp1d doesn't handle NaNs well in x or y. 
-    # Let's assume processed ET is clean-ish. If NaNs persist, we might get NaNs in output.
     
     def safe_interp(time_src, data_src, time_target):
         # Drop NaNs from source for interpolation definition
@@ -111,20 +109,46 @@ def process_subject(subject_id):
     gaze_x_interp = safe_interp(et_time_sec, gaze_x_src, TIME_AXIS)
     gaze_y_interp = safe_interp(et_time_sec, gaze_y_src, TIME_AXIS)
 
-    # 5. Combine DataFrame
-    df_combined = pd.DataFrame({
-        'Time_sec': TIME_AXIS,
+
+    # 5. Combine data into a dictionary for easy checking
+    data_map = {
         'GSR': gsr_interp,
         'Heart_Rate': hr_interp,
         'Pupil_Mean': pupil_interp,
         'Gaze_X': gaze_x_interp,
         'Gaze_Y': gaze_y_interp
-    })
+    }
 
-    # 6. Save
-    output_path = os.path.join(OUTPUT_DIR, f"{subject_id}_combined_physio.csv")
-    df_combined.to_csv(output_path, index=False)
-    # print(f"  -> Saved to {output_path}")
+    reasons_to_skip = []
+
+    for name, data in data_map.items():
+        # Convert to numpy array once for multiple checks
+        arr = np.array(data)
+    
+        # Check 1: Empty
+        if arr.size == 0:
+            reasons_to_skip.append(f"{name} is empty")
+            continue # Move to next column
+    
+        # Check 2: Contains NaNs
+        if np.isnan(arr).any():
+            reasons_to_skip.append(f"{name} contains NaNs")
+            continue
+
+        # Check 3: Zero Variance (Flatline)
+        if np.var(arr) == 0:
+            reasons_to_skip.append(f"{name} has zero variance")
+
+    # Final Decision
+    if reasons_to_skip:
+        print(f"  -> SKIP {subject_id}: {'; '.join(reasons_to_skip)}")
+    else:
+        # 6. Save only if all checks pass
+        df_combined = pd.DataFrame({'Time_sec': TIME_AXIS, **data_map})
+        output_path = os.path.join(OUTPUT_DIR, f"{subject_id}_combined_physio.csv")
+        df_combined.to_csv(output_path, index=False)
+        print(f"  -> Saved {subject_id}")
+
 
 def main():
     # Find all subjects from GSR folder

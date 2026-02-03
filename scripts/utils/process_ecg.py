@@ -148,6 +148,9 @@ def process_subject(file_path):
         print(f"  ERROR processing {filename}: {e}")
 
 def main():
+    if not os.path.exists(PROCESSED_DATA_DIR):
+        os.makedirs(PROCESSED_DATA_DIR)
+        
     # Find all CSV files
     # Glob is now using the absolute path we calculated at the top
     csv_files = glob.glob(os.path.join(RAW_DATA_DIR, '*.csv'))
