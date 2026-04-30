@@ -197,10 +197,12 @@ def calculate_permuted_stats(df_a, df_b, n_permutations=5000):
     mean_z = np.mean(z_values)
     ci_lower_z = np.percentile(z_values, 2.5)
     ci_upper_z = np.percentile(z_values, 97.5)
+
+    p_value = np.sum(r_values <= 0) / n_permutations
     
     mean_r = np.tanh(mean_z)
     # Return distances for error bars
-    return mean_r, (mean_r - np.tanh(ci_lower_z)), (np.tanh(ci_upper_z) - mean_r)
+    return mean_r, (mean_r - np.tanh(ci_lower_z)), (np.tanh(ci_upper_z) - mean_r), p_value
 
 
 
