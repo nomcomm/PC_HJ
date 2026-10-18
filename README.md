@@ -1,8 +1,7 @@
 Analysis for Schmälzle, Cho & Turner (2026)
 ===========================================
 
-Data and analysis code for *Schmälzle, R., Cho, H. J., & Turner, M. (2026). The Signal in the Noise:
-Hierarchy and Robustness of Physiological Audience Alignment during Narrative Media. Communication
+Data and analysis code for *Schmälzle, R., Cho, H. J., & Turner, M. (2026). The Bio-Functional Audience: Shared Physiological Alignment to Narrative Media. Communication
 Research.* [link](link_goes_here) · preprint: [bioRxiv](https://www.biorxiv.org/content/10.64898/2026.02.05.703516v1)
 
 ***
