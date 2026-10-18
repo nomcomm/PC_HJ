@@ -9,3 +9,7 @@ data/03_visualizations/grand_integrated_movie.mp4
 .venv/
 scripts/.jupyter/
 scripts/.ipynb_checkpoints/
+# Stimulus film and anything showing film frames (copyright)
+*.mp4
+*.mov
+*.m4v
