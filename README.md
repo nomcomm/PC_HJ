@@ -6,7 +6,7 @@ Research.* [link](link_goes_here) · preprint: [bioRxiv](https://www.biorxiv.org
 
 ***
 
-<img align="right" width=400px src=scripts/explainer_fig.png>
+<img align="right" width=700px src=scripts/explainer_fig.png>
 
 Participants watched the Pixar short film *Partly Cloudy* (2009) in the lab while eye movements,
 pupil size, heart rate and electrodermal activity were recorded. Half of the participants saw the
