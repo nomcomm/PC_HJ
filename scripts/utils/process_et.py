@@ -161,7 +161,7 @@ def main():
             # Generate output filename
             base_name = os.path.basename(file_path)
             # Remove date/time clutter if desired, or keep unique. 
-            # sub001_11-11-25 13h40m.csv -> sub001_processed_et.csv
+            # sub001_<session date and time>.csv -> sub001_processed_et.csv
             # Extract subject ID (first part split by _)
             sub_id = base_name.split('_')[0]
             output_filename = f"{sub_id}_processed_et.csv"
